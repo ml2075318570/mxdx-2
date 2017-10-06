@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        div div {
+            width: 280px;
+            height: 200px;
+            text-align: center;
+            border: 1px solid black;
+            line-height: 200px;
+            display: none;
+            font-size: 50px;
+        }
+        .active {
+            background: red;
+        }
+    </style>
+</head>
+<body>
+<div id="box">
+    <input type="button" value="按钮1" class="active" />
+    <input type="button" value="按钮2" />
+    <input type="button" value="按钮3" />
+    <div style="display: block;">内容1</div>
+    <div>内容2</div>
+    <div>内容3</div>
+</div>
+</body>
+<script>
+    (function(window){
+      function Tab(id){
+          this.parent = document.getElementById(id);
+          this.aInp = this.parent.getElementsByTagName('input');
+          this.aDiv = this.parent.getElementsByTagName('div');
+          this.init();
+      }
+      Tab.prototype.init = function () {
+          var that = this;
+          for (var i = 0; i < this.aInp.length; i++) {
+              this.aInp[i].index = i;
+              this.aInp[i].onclick = function () {
+                  that.fnTab(this.index);
+              }
+          }
+      }
+      Tab.prototype.fnTab = function (idx) {
+          for (var j = 0; j < this.aInp.length; j++) {
+              this.aInp[j].className = '';
+              this.aDiv[j].style.display = 'none';
+          }
+          this.aInp[idx].className = 'active';
+          this.aDiv[idx].style.display = 'block';
+      }
+        window.Tab = Tab;
+
+  })(window);
+    new Tab('box');
+</script>
+</html>

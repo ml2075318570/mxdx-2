@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        div div {
+            width: 280px;
+            height: 200px;
+            text-align: center;
+            border: 1px solid black;
+            line-height: 200px;
+            display: none;
+            font-size: 50px;
+        }
+        .active {
+            background: red;
+        }
+    </style>
+</head>
+<body>
+<button>让第一个选项卡停止播放</button>
+<button>让第二个选项卡自动播放</button>
+<button>让第一个选项卡和第二个选项卡反转</button>
+<div id="box">
+    <input type="button" value="按钮1" class="active" />
+    <input type="button" value="按钮2" />
+    <input type="button" value="按钮3" />
+    <div style="display: block;">内容1</div>
+    <div>内容2</div>
+    <div>内容3</div>
+</div>
+<div id="box2">
+    <input type="button" value="按钮1" class="active" />
+    <input type="button" value="按钮2" />
+    <input type="button" value="按钮3" />
+    <div style="display: block;">内容1</div>
+    <div>内容2</div>
+    <div>内容3</div>
+</div>
+</body>
+<script>
+    (function(wondow){
+        function Tab(id){
+            this.parent = document.getElementById(id);
+            this.aInp = this.parent.getElementsByTagName('input');
+            this.aDiv = this.parent.getElementsByTagName('div');
+            this.init();
+            this.timer = null;
+            this.num = 0;
+            this.isPlay = false;
+        }
+        Tab.prototype.init = function () {
+            var that = this;
+            for (var i = 0; i < this.aInp.length; i++) {
+                this.aInp[i].index = i;
+                this.aInp[i].onclick = function () {
+                    that.fnTab(this.index);
+                }
+            }
+        }
+        Tab.prototype.fnTab = function (idx) {
+            for (var j = 0; j < this.aInp.length; j++) {
+                this.aInp[j].className = '';
+                this.aDiv[j].style.display = 'none';
+            }
+            this.aInp[idx].className = 'active';
+            this.aDiv[idx].style.display = 'block';
+        }
+        Tab.prototype.autoPlay = function () {
+            this.isPlay = true;
+            var that = this;
+            this.timer = setInterval(function () {
+                that.num++;
+                if(that.num>that.aInp.length-1){
+                    that.num = 0;
+                }
+                that.fnTab(that.num);
+            },1000)
+        }
+        Tab.prototype.stop = function () {
+            this.isPlay = false;
+            clearInterval(this.timer);
+        }
+        window.Tab = Tab;
+    })(window);
+    var aBtn = document.getElementsByTagName('button');
+    var tab1 = new Tab('box');
+    tab1.autoPlay();
+    var tab2 = new Tab('box2');
+    aBtn[0].onclick = function () {
+        tab1.stop();
+    }
+    aBtn[1].onclick = function () {
+        tab2.autoPlay();
+    }
+    aBtn[2].onclick = function () {
+        if(tab1.isPlay){
+            tab1.stop();
+        }else {
+            tab1.autoPlay();
+        }
+        if(tab2.isPlay){
+            tab2.stop();
+        }else {
+            tab2.autoPlay();
+        }
+    }
+</script>
+</html>
